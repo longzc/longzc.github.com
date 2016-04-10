@@ -1,0 +1,303 @@
+﻿$axure.loadCurrentPage({
+  "url":"menu.html",
+  "generationDate":new Date(1460297998022.08),
+  "isCanvasEnabled":false,
+  "variables":["OnLoadVariable"],
+  "page":{
+    "packageId":"2c80aed6f3364f2f887211390ff0085e",
+    "type":"Axure:Page",
+    "name":"menu",
+    "notes":{
+},
+    "style":{
+      "baseStyle":"627587b6038d43cca051c114ac41ad32",
+      "pageAlignment":"near",
+      "fill":{
+        "fillType":"solid",
+        "color":0xFFFFFFFF},
+      "image":null,
+      "imageHorizontalAlignment":"near",
+      "imageVerticalAlignment":"near",
+      "imageRepeat":"auto",
+      "favicon":null,
+      "sketchFactor":"0",
+      "colorStyle":"appliedColor",
+      "fontName":"应用字体",
+      "borderWidth":"0"},
+    "adaptiveStyles":{
+},
+    "interactionMap":{
+},
+    "diagram":{
+      "objects":[{
+          "id":"0ec009cb4ee74bb3ac75ff71afbcba21",
+          "label":"",
+          "type":"imageBox",
+          "styleType":"imageBox",
+          "visible":true,
+          "style":{
+            "location":{
+              "x":110,
+              "y":0},
+            "size":{
+              "width":1673,
+              "height":1000}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"f8af8852f6c3422083255f00cfe5c096",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "location":{
+                  "x":110,
+                  "y":0},
+                "size":{
+                  "width":1673,
+                  "height":1000}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"images/loading/u0.jpg"}},
+{
+          "id":"9abf120711994f0dbe567e214d3c443b",
+          "label":"",
+          "type":"dynamicPanel",
+          "styleType":"dynamicPanel",
+          "visible":true,
+          "style":{
+            "location":{
+              "x":306,
+              "y":137},
+            "size":{
+              "width":1280,
+              "height":719}},
+          "adaptiveStyles":{
+},
+          "scrollbars":"none",
+          "fitToContent":false,
+          "propagate":false,
+          "diagrams":[{
+              "id":"750eec75245a41a4afe3c728aa2fa9f4",
+              "label":"State1",
+              "type":"Axure:PanelDiagram",
+              "objects":[{
+                  "id":"a56fc247dbd344a5898df4eaa5b31f44",
+                  "label":"",
+                  "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                  "type":"buttonShape",
+                  "styleType":"buttonShape",
+                  "visible":true,
+                  "style":{
+                    "size":{
+                      "width":1280,
+                      "height":720},
+                    "cornerRadiusTopLeft":"20"},
+                  "adaptiveStyles":{
+},
+                  "objects":[{
+                      "id":"95c086cb48944eefb41882be9c160697",
+                      "label":"",
+                      "isContained":true,
+                      "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                      "type":"richTextPanel",
+                      "styleType":"paragraph",
+                      "visible":true,
+                      "style":{
+                        "size":{
+                          "width":1280,
+                          "height":720},
+                        "cornerRadiusTopLeft":"20"},
+                      "adaptiveStyles":{
+}}],
+                  "images":{
+                    "normal~":"images/loading/u3.png"}},
+{
+                  "id":"44e6578b0a12435894646344a3fc4b73",
+                  "label":"",
+                  "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                  "type":"buttonShape",
+                  "styleType":"buttonShape",
+                  "visible":true,
+                  "style":{
+                    "fontSize":"18px",
+                    "location":{
+                      "x":385,
+                      "y":80},
+                    "size":{
+                      "width":510,
+                      "height":170}},
+                  "adaptiveStyles":{
+},
+                  "objects":[{
+                      "id":"ba3cdcefa24d4ecf81cb49bf3c26d367",
+                      "label":"",
+                      "isContained":true,
+                      "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                      "type":"richTextPanel",
+                      "styleType":"paragraph",
+                      "visible":true,
+                      "style":{
+                        "fontSize":"18px",
+                        "location":{
+                          "x":385,
+                          "y":80},
+                        "size":{
+                          "width":510,
+                          "height":170}},
+                      "adaptiveStyles":{
+}}],
+                  "images":{
+                    "normal~":"images/menu/u5.png"}},
+{
+                  "id":"3a12748eb1c6490b86d8a87401f26995",
+                  "label":"",
+                  "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                  "type":"button",
+                  "styleType":"button",
+                  "visible":true,
+                  "style":{
+                    "location":{
+                      "x":540,
+                      "y":440},
+                    "size":{
+                      "width":200,
+                      "height":50}},
+                  "adaptiveStyles":{
+},
+                  "interactionMap":{
+                    "onClick":{
+                      "description":"OnClick",
+                      "cases":[{
+                          "description":"用例 1",
+                          "isNewIfGroup":false,
+                          "actions":[{
+                              "action":"linkWindow",
+                              "description":"在 当前窗口 打开 level",
+                              "target":{
+                                "targetType":"page",
+                                "url":"level.html",
+                                "includeVariables":true},
+                              "linkType":"current"}]}]}},
+                  "tabbable":true},
+{
+                  "id":"fe94db91a31d43239bc760d678ee627f",
+                  "label":"音效：开",
+                  "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                  "type":"button",
+                  "styleType":"button",
+                  "visible":true,
+                  "style":{
+                    "location":{
+                      "x":540,
+                      "y":505},
+                    "size":{
+                      "width":200,
+                      "height":50}},
+                  "adaptiveStyles":{
+},
+                  "interactionMap":{
+                    "onClick":{
+                      "description":"OnClick",
+                      "cases":[{
+                          "description":"用例 1",
+                          "isNewIfGroup":false,
+                          "actions":[{
+                              "action":"fadeWidget",
+                              "description":"切换 音效：开,<br>音效：关",
+                              "objectsToFades":[{
+                                  "objectPath":["fe94db91a31d43239bc760d678ee627f"],
+                                  "fadeInfo":{
+                                    "fadeType":"toggle",
+                                    "options":{
+                                      "showType":"none"}}},
+{
+                                  "objectPath":["7063e49a6e1e461db0fc460ca8967c5b"],
+                                  "fadeInfo":{
+                                    "fadeType":"toggle",
+                                    "options":{
+                                      "showType":"none"}}}]}]}]}},
+                  "tabbable":true},
+{
+                  "id":"3695aa1854a74d5593e895fda078d9c2",
+                  "label":"",
+                  "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                  "type":"button",
+                  "styleType":"button",
+                  "visible":true,
+                  "style":{
+                    "location":{
+                      "x":540,
+                      "y":567},
+                    "size":{
+                      "width":200,
+                      "height":50}},
+                  "adaptiveStyles":{
+}},
+{
+                  "id":"7063e49a6e1e461db0fc460ca8967c5b",
+                  "label":"音效：关",
+                  "parentDynamicPanel":"9abf120711994f0dbe567e214d3c443b",
+                  "type":"button",
+                  "styleType":"button",
+                  "visible":false,
+                  "style":{
+                    "location":{
+                      "x":540,
+                      "y":505},
+                    "size":{
+                      "width":200,
+                      "height":50},
+                    "visible":false},
+                  "adaptiveStyles":{
+},
+                  "interactionMap":{
+                    "onClick":{
+                      "description":"OnClick",
+                      "cases":[{
+                          "description":"用例 1",
+                          "isNewIfGroup":false,
+                          "actions":[{
+                              "action":"fadeWidget",
+                              "description":"切换 音效：开,<br>音效：关",
+                              "objectsToFades":[{
+                                  "objectPath":["fe94db91a31d43239bc760d678ee627f"],
+                                  "fadeInfo":{
+                                    "fadeType":"toggle",
+                                    "options":{
+                                      "showType":"none"}}},
+{
+                                  "objectPath":["7063e49a6e1e461db0fc460ca8967c5b"],
+                                  "fadeInfo":{
+                                    "fadeType":"toggle",
+                                    "options":{
+                                      "showType":"none"}}}]}]}]}},
+                  "tabbable":true}]}]}]}},
+  "masters":{
+},
+  "objectPaths":{
+    "0ec009cb4ee74bb3ac75ff71afbcba21":{
+      "scriptId":"u0"},
+    "f8af8852f6c3422083255f00cfe5c096":{
+      "scriptId":"u1"},
+    "9abf120711994f0dbe567e214d3c443b":{
+      "scriptId":"u2"},
+    "a56fc247dbd344a5898df4eaa5b31f44":{
+      "scriptId":"u3"},
+    "95c086cb48944eefb41882be9c160697":{
+      "scriptId":"u4"},
+    "44e6578b0a12435894646344a3fc4b73":{
+      "scriptId":"u5"},
+    "ba3cdcefa24d4ecf81cb49bf3c26d367":{
+      "scriptId":"u6"},
+    "3a12748eb1c6490b86d8a87401f26995":{
+      "scriptId":"u7"},
+    "fe94db91a31d43239bc760d678ee627f":{
+      "scriptId":"u8"},
+    "3695aa1854a74d5593e895fda078d9c2":{
+      "scriptId":"u9"},
+    "7063e49a6e1e461db0fc460ca8967c5b":{
+      "scriptId":"u10"}}});
