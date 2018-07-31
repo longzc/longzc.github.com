@@ -1,350 +1,619 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE HTML>
+<html>
 <head>
-    <title>Untitled Document</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link type="text/css" href="resources/css/reset.css" rel="Stylesheet" />
-    <link type="text/css" href="resources/css/default.css" rel="Stylesheet" />
-
-    <script type="text/javascript">
-        if (location.href.toString().indexOf('file://localhost/') == 0) {
-            location.href = location.href.toString().replace('file://localhost/', 'file:///');
-        }
-    </script>
-
-    <script type="text/javascript" src="resources/scripts/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="resources/scripts/player/splitter.js"></script>
-    <script type="text/javascript" src="resources/scripts/axutils.js"></script>
-    <script type="text/javascript" src="resources/scripts/player/axplayer.js"></script>
-    <script type="text/javascript" src="resources/scripts/messagecenter.js"></script>
-    <script type="text/javascript" src="data/document.js"></script>
-    <style type="text/css">
-
-#outerContainer {
-	width:1000px;
-	height:1500px;
-}
-
-.vsplitbar {
-	width: 3px;
-	background: #B9B9B9;
-}
-
-#rightPanel {
-    background-color: White;
-}
-
-#leftPanel {
-    /*min-width: 190px;*/
-}
-
-.splitterMask {
-   position:absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   overflow: hidden;
-   background-image: url(resources/images/transparent.gif);
-   z-index: 20000;
-}
-
-
-    </style>
-    <script type="text/javascript" language="JavaScript"><!--
-        // isolate scope
-        (function() {
-            setUpController();
-
-            var configuration = $axure.document.configuration;
-            var _settings = {};
-            _settings.projectId = configuration.prototypeId;
-            _settings.isAxshare = configuration.isAxshare;
-            _settings.loadFeedbackPlugin = configuration.loadFeedbackPlugin;
-            _settings.startCollapsed = HashString("c") == "1";
-
-            $axure.player.settings = _settings;
-
-            $(window).bind('load', function() {
-                if(CHROME_5_LOCAL && !$('body').attr('pluginDetected')) {
-                    window.location = 'resources/chrome/chrome.html';
-                }
-            });
-
-            $(document).ready(function() {
-                $axure.page.bind('load.start', mainFrame_onload);
-                $axure.messageCenter.addMessageListener(messageCenter_message);
-
-                if($axure.player.settings.loadFeedbackPlugin) {
-                    if($axure.player.settings.isAxshare) {
-                        $axure.utils.loadJS('/Scripts/plugins/feedback/feedback.js');
-                    } else {
-                        $axure.utils.loadJS('http://share.axure.com/Scripts/plugins/feedback/feedback.js');
-                    }
-                }
-
-                if(navigator.userAgent.indexOf("MSIE") >= 0) $('#outerContainer').width('100%');
-                initialize();
-                if($axure.player.settings.startCollapsed) $('#outerContainer').splitter({ sizeLeft: 0 });
-                else $('#outerContainer').splitter({ sizeLeft: 250 });
-                $('#leftPanel').width(250);
-
-                $(window).resize(function() { resizeContent(); });
-
-                $('#maximizePanelContainer').hide();
-
-                initializeLogo();
-
-                $(window).resize();
-                resizeContent();
-                //wait for ie to get to a good state and resize
-                if($.browser.msie && $.browser.version == "6.0") setTimeout(function() { $('#outerContainer').trigger('resize'); }, 30);
-
-                if($axure.player.settings.startCollapsed) {
-                    collapse();
-                    $('#leftPanel').width(0);
-                }
-            });
-        })();
-
-        var lastLeftPanelWidth = 250;
-
-        function messageCenter_message(message, data) {
-            if(message == 'expandFrame') expand();
-        }
-
-        function resizeContent() {
-            var newHeight = $(window).height();
-            var newWidth = $(window).width();
-
-            var controlContainerHeight = newHeight - 42;
-            if($('#interfaceControlFrameLogoContainer').is(':visible')) controlContainerHeight -= $('#interfaceControlFrameLogoContainer').height() + 16;
-
-            $('#outerContainer').height(newHeight).width(newWidth);
-            $('.vsplitbar').height(newHeight);
-            $('#leftPanel').height(newHeight);
-            $('#interfaceControlFrame').height(newHeight);
-            $('#interfaceControlFrameContainer').height(controlContainerHeight);
-
-            $('#rightPanel').height(newHeight);
-            $('#mainFrame').height(newHeight);
-
-            $('#rightPanel').width($(window).width() - $('#leftPanel').width() - $('.vsplitbar').width());
-        }
-
-        function closePlayer() {
-            if($axure.page.location) window.location.href = $axure.page.location;
-            else {
-                var pageFile = getInitialUrl();
-                var currentLocation = window.location.toString();
-                window.location.href = currentLocation.substr(0, currentLocation.lastIndexOf("/") + 1) + pageFile;
-            }
-        }
-
-        function replaceHash(newHash) {
-            var currentLocWithoutHash = window.location.toString().split('#')[0];
-
-            //We use replace so that every hash change doesn't get appended to the history stack.
-            //We use replaceState in browsers that support it, else replace the location
-            if (typeof window.history.replaceState != 'undefined') {
-                window.history.replaceState(null, null, currentLocWithoutHash + newHash);
-            } else {
-                window.location.replace(currentLocWithoutHash + newHash);
-            }
-        }
-
-        function collapse() {
-            var currentHash = window.location.hash;
-            //If the collapse hash string var isn't present and set to 1, insert it
-            if (currentHash.indexOf('#c=1') == -1 && currentHash.indexOf('&c=1') == -1) {
-                var hashToSet = '';
-
-                var varIndex = currentHash.indexOf('#c=');
-                if (varIndex == -1) varIndex = currentHash.indexOf('&c=');
-                if (varIndex != -1) {
-                    var newHash = currentHash.substring(0, varIndex);
-
-                    newHash = newHash == '' ? '#c=1' : newHash + '&c=1';
-
-                    var ampIndex = currentHash.indexOf('&', varIndex + 1);
-                    if (ampIndex != -1) {
-                        newHash = newHash + currentHash.substring(ampIndex);
-                    }
-                    hashToSet = newHash;
-                } else if (currentHash.indexOf('#') != -1) {
-                    hashToSet = currentHash + '&c=1';
-                } else {
-                    hashToSet = '#c=1';
-                }
-
-                if (hashToSet != '') {
-                    replaceHash(hashToSet);
-                }
-            }
-
-            $('#maximizePanelContainer').show();
-            lastLeftPanelWidth = $('#leftPanel').width();
-            $('#leftPanel').hide();
-            $('.vsplitbar').hide();
-            $('#rightPanel').width($(window).width());
-            $(window).resize();
-            $('#outerContainer').trigger('resize');
-        }
-
-        function expand() {
-            var currentHash = self.location.hash;
-            var varIndex = currentHash.indexOf('&c=');
-            if (varIndex == -1) varIndex = currentHash.indexOf('#c=');
-            //If the collapse hash string var is present, remove it
-            if (varIndex != -1) {
-                var newHash = currentHash.substring(0, varIndex);
-
-                var ampIndex = currentHash.indexOf('&', varIndex + 1);
-                if (ampIndex != -1) {
-                    newHash = newHash == '' ? '#' + currentHash.substring(ampIndex + 1) : newHash + currentHash.substring(ampIndex);
-                }
-
-                replaceHash(newHash);
-            }
-
-            $('#maximizePanelContainer').hide();
-            $('#leftPanel').width(lastLeftPanelWidth);
-            $('#leftPanel').show();
-            $('.vsplitbar').show();
-            $('#rightPanel').width($(window).width() - $('#leftPanel').width() - $('.vsplitbar').width());
-            $(window).resize();
-            $('#outerContainer').trigger('resize');
-        }
-
-        function initialize() {
-            var legacyQString = QueryString("Page");
-            if (legacyQString.length > 0) {
-                location.href = location.href.substring(0, location.href.indexOf("?")) + "#p=" + legacyQString;
-                return;
-            }
-
-            var mainFrame = document.getElementById("mainFrame");
-            mainFrame.contentWindow.location.href = getInitialUrl();
-        }
-        
-        function getInitialUrl() {
-            var pageName = HashString("p");
-            if(pageName.length > 0) return pageName + ".html";
-            else {
-                var url = getFirstPageUrl($axure.document.sitemap.rootNodes);
-                return (url ? url : "about:blank");
-            }
-        }
-
-        function getFirstPageUrl(nodes) {
-            for (var i = 0; i < nodes.length; i++) {
-                var node = nodes[i];
-                if (node.url) return node.url;
-                else {
-                    var hasChildren = (node.children && node.children.length > 0);
-                    if (hasChildren) {
-                        var url = getFirstPageUrl(node.children);
-                        if (url) return url;
-                    }
-                }
-            }
-            return null;
-        }
-
-        function initializeLogo() {
-            if($axure.document.configuration.logoImagePath) {
-                $('#interfaceControlFrameLogoImageContainer').html('<img id="logoImage" src="" />');
-                $('#logoImage').attr('src', $axure.document.configuration.logoImagePath).load(function() { resizeContent(); });
-                $('#interfaceControlFrameMinimizeContainer').css('background-color', '#FFFFFF');
-            } else $('#interfaceControlFrameLogoImageContainer').hide();
-
-            if ($axure.document.configuration.logoImageCaption) {
-                $('#interfaceControlFrameLogoCaptionContainer').html($axure.document.configuration.logoImageCaption);
-                $('#interfaceControlFrameMinimizeContainer').css('background-color', '#FFFFFF');
-            } else $('#interfaceControlFrameLogoCaptionContainer').hide();
-
-            if(!$('#interfaceControlFrameLogoImageContainer').is(':visible') && !$('#interfaceControlFrameLogoCaptionContainer').is(':visible')) {
-                $('#interfaceControlFrameLogoContainer').hide();
-            }
-        }
-
-        function mainFrame_onload() {
-            if($axure.page.pageName) document.title = $axure.page.pageName;
-        }
-
-        function QueryString(query) {
-            var qstring = self.location.href.split("?");
-            if(qstring.length < 2) return "";
-            return GetParameter(qstring, query);
-        }
-        
-        function GetParameter(qstring, query) {
-            var prms = qstring[1].split("&");
-            var frmelements = new Array();
-            var currprmeter, querystr = "";
-
-            for(var i = 0; i < prms.length; i++) {
-                currprmeter = prms[i].split("=");
-                frmelements[i] = new Array();
-                frmelements[i][0] = currprmeter[0];
-                frmelements[i][1] = currprmeter[1];
-            }
-
-            for(j = 0; j < frmelements.length; j++) {
-                if(frmelements[j][0].toLowerCase() == query.toLowerCase()) {
-                    querystr = frmelements[j][1];
-                    break;
-                }
-            }
-            return querystr;
-        }
-        
-        function HashString(query) {
-            var qstring = self.location.href.split("#");
-            if(qstring.length < 2) return "";
-            return GetParameter(qstring, query);
-        }
-
-    --></script>
-
-    <link type="text/css" rel="Stylesheet" href="plugins/sitemap/styles/sitemap.css" />
-    <script type="text/javascript" src="plugins/sitemap/sitemap.js"></script>
-    <link type="text/css" rel="Stylesheet" href="plugins/page_notes/styles/page_notes.css" />
-    <script type="text/javascript" src="plugins/page_notes/page_notes.js"></script>
-
+<title>Home</title>
+<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.min.js"></script>
+<!---- start-smoth-scrolling---->
+<script type="text/javascript" src="js/move-top.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+					<script type="text/javascript" src="js/jquery.reveal.js"></script>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(".scroll").click(function(event){		
+					event.preventDefault();
+					$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+				});
+			});
+		</script>
+		<!---- start-smoth-scrolling---->
+		 <!-- Custom Theme files -->
+		<link href="css/theme-style.css" rel='stylesheet' type='text/css' />
+		<link rel="stylesheet" href="reveal.css">
+   		 <!-- Custom Theme files -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+		</script>
+		<!----webfonts---->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+		<!----//webfonts---->
+		<!----start-top-nav-script---->
+		<script>
+			$(function() {
+				var pull 		= $('#pull');
+					menu 		= $('nav ul');
+					menuHeight	= menu.height();
+				$(pull).on('click', function(e) {
+					e.preventDefault();
+					menu.slideToggle();
+				});
+				$(window).resize(function(){
+	        		var w = $(window).width();
+	        		if(w > 320 && menu.is(':hidden')) {
+	        			menu.removeAttr('style');
+	        		}
+	    		});
+			});
+		</script>
+		<!----//End-top-nav-script---->
 </head>
-<body scroll="no">
-    <div id="outerContainer">
+	<body>
+		<!-----start-container----->
+			<!----- start-header---->
+			<div id="home" class="header">
+				<div class="container">
+					<div class="logo">
+						<a href="index.html"><img src="images/yidian-logo.png" title="logo" /></a>
+					</div>
+					<!----start-top-nav---->
+					 <nav class="top-nav">
+						<ul class="top-nav">
+							<li class="active"><a href="#home" class="scroll">主页 <span> </span></a></li>
+							<!-- <li class="page-scroll"><a href="#ser" class="scroll">Services <span> </span></a></li> -->
+							<li class="page-scroll"><a href="#about" class="scroll">公司介绍<span> </span></a></li>
+							<li class="page-scroll"><a href="#port" class="scroll">作品案例 <span> </span></a></li>
+							<li class="page-scroll"><a href="#team" class="scroll">主创团队<span> </span></a></li>
+							<li class="contatct-active" class="page-scroll"><a href="#contact" class="scroll">联系我们</a></li>
+						</ul>
+						<a href="#" id="pull"><img src="images/nav-icon.png" title="menu" /></a>
+					</nav>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+			<!----- //End-header---->
+			<!----- start-slider---->
+			<!----start-slider-script---->
+			<script src="js/responsiveslides.min.js"></script>
+			 <script>
+			    // You can also use "$(window).load(function() {"
+			    $(function () {
+			      // Slideshow 4
+			      $("#slider4").responsiveSlides({
+			        auto: true,
+			        pager: true,
+			        nav: true,
+			        speed: 500,
+			        namespace: "callbacks",
+			        before: function () {
+			          $('.events').append("<li>before event fired.</li>");
+			        },
+			        after: function () {
+			          $('.events').append("<li>after event fired.</li>");
+			        }
+			      });
+			
+			    });
+			  </script>
+			<!----//End-slider-script---->
+			<!-- Slideshow 4 -->
+			    <div  id="top" class="callbacks_container">
+			      <ul class="rslides" id="slider4">
+			        <li>
+			          <img src="images/banner1.jpg" alt="">
+			          <div class="caption text-center">
+			          	<div class="slide-text-info">
+			          		<a class="btn1" href="#"><span>欢迎光临</span></a>
+			          		<h1>我们是 <span>意典</span> 设计</h1>
+			          		<div class="slide-text">
+			          			<p>北京意典室内设计咨询有限公司创立于2014年，业务涉及专业化室内设计、软装设计、展览展示以及装潢设计，项目涵及星级酒店宾馆、现代化商业中心、写字楼、公众餐饮娱乐设施、展厅设计，是北京建筑装饰协会会员。</p>
+			          		</div>
+			          		<a class="btn2" href="#about"><span>公司介绍</span></a>
+			          	</div>
+			          </div>
+			        </li>
+			        <li>
+			          <img src="images/banner2.jpg" alt="">
+			          <div class="caption text-center">
+			          	<div class="slide-text-info">
+			          		<a class="btn1" href="#"><span>Hello world</span></a>
+			          		<h1>Lorem <span> dolor </span> consec</h1>
+			          		<div class="slide-text">
+			          			<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+			          		</div>
+			          		<a class="btn2" href="#port"><span>产品展示</span></a>
+			          	</div>
+			          </div>
+			        </li>
 
-        <div id="leftPanel">
-            <div id="interfaceControlFrame">
-                <div id="interfaceControlFrameMinimizeContainer">
-                    <a title="Minimize" id="interfaceControlFrameMinimizeButton" onclick="collapse();">&nbsp;</a>
-                    <div id="interfaceControlFrameCloseContainer">
-                        <a title="Close" id="interfaceControlFrameCloseButton" onclick="closePlayer();">&nbsp;</a>
-                    </div>
-                </div>
-                <div id="interfaceControlFrameLogoContainer">
-                    <div id="interfaceControlFrameLogoImageContainer"></div>
-                    <div id="interfaceControlFrameLogoCaptionContainer"></div>
-                </div>
-                <div id="interfaceControlFrameHeaderContainer">
-                    <ul id="interfaceControlFrameHeader">
-                    </ul>
-                </div>
-                <div id="interfaceControlFrameContainer">
-                </div>
-            </div>
-        </div>
-        <div id="rightPanel">
-            <iframe id="mainFrame" width="100%" height="100%" src="" frameborder="0" style="display: block;"></iframe>
-        </div>
+			        <li>
+			          <img src="images/banner3.jpg" alt="">
+			          
+			        </li>
+			        
+			      </ul>
+			    </div>
+			    <div class="clearfix"> </div>
+			<!----- //End-slider---->
+			<!----start-services---->
+<!-- 			<div id="ser" class="services">
+				<div class="container">
+					<div class="services-head text-center">
+						<h3>Our Workflow</h3>
+						<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
+					</div>
+		
+					<div class="services-grids">
+						<div class="col-md-4 services-grid">
+							<div class="col-md-3 services-grid-left">
+								<a class="top-icon1" href="#"><span> </span></a>
+							</div>
+							<div class="col-md-9 services-grid-right">
+								<h4><a href="#">Email Marketing</a></h4>
+								<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<div class="col-md-4 services-grid">
+							<div class="col-md-3 services-grid-left">
+								<a class="top-icon2" href="#"><span> </span></a>
+							</div>
+							<div class="col-md-9 services-grid-right">
+								<h4><a href="#">Graphic Design</a></h4>
+								<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<div class="col-md-4 services-grid">
+							<div class="col-md-3 services-grid-left">
+								<a class="top-icon3" href="#"><span> </span></a>
+							</div>
+							<div class="col-md-9 services-grid-right">
+								<h4><a href="#">Web Design</a></h4>
+								<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<div class="col-md-4 services-grid">
+							<div class="col-md-3 services-grid-left">
+								<a class="top-icon4" href="#"><span> </span></a>
+							</div>
+							<div class="col-md-9 services-grid-right">
+								<h4><a href="#">Print</a></h4>
+								<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<div class="col-md-4 services-grid">
+							<div class="col-md-3 services-grid-left">
+								<a class="top-icon5" href="#"><span> </span></a>
+							</div>
+							<div class="col-md-9 services-grid-right">
+								<h4><a href="#">Hosting</a></h4>
+								<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<div class="col-md-4 services-grid">
+							<div class="col-md-3 services-grid-left">
+								<a class="top-icon6" href="#"><span> </span></a>
+							</div>
+							<div class="col-md-9 services-grid-right">
+								<h4><a href="#">Email Marketing</a></h4>
+								<p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+							</div>
+							<div class="clearfix"> </div>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+			</div> -->
+			<!----//End-services---->
+					<!-----//End-services-grids---->
+					
+					<div id="about" class="about">
+						<div class="container">
+							<div class="about-head">
+								<h4>公司简介</h4>
+								<h5>北京意典室内设计咨询有限公司</h5>
+								<p>公司创立于2014年，业务涉及专业化室内设计、软装设计、展览展示以及装潢设计，项目涵及星级酒店宾馆、现代化商业中心、写字楼、公众餐饮娱乐设施、展厅设计，是北京建筑装饰协会会员。</p>
+							</div>
+							
+								<div class="about-grids">
+									<div class="col-md-7 about-grid-left">
+										<span> </span>
+									</div>
+									<div class="col-md-5 about-grid-right">
+										<h5>我们的团队</h5>
+										<p>意典拥有具备相当素质及专业资格的设计团队，从事专业室内设计、计算机CAD设计和工程材料及配套产品的选型，配合以现代化的管理手段实行各项业务的整体运作和发展。</p>
+										<h6>我们的理念</h6>
+										<p>意典秉承“意会人性，品质经典”的企业精神。精心钻研现代设计精髓，不断融入多方艺术设计手法，力求打造高品质的前沿设计产品。在项目实施过程中，公司上下精诚合作，务求各环节严谨顺畅，力争为客户提供最优质完美的产品和服务。</p>
+										
+									</div>
+									<div class="clearfix"> </div>
+								</div>
+								
+							</div>
+						</div>
+		
+		<!-- <div class="tlinks">Collect from <a href="" ></a></div> -->
+	
+		<div id="port" class="portfolio-box-main">
+			<div class="container">
+				<div class="portfolio-head text-center">
+					<h3>产品案例</h3>
+					<span>精心钻研现代设计精髓</span>
+					<p>"在项目实施过程中，公司上下精诚合作，务求各环节严谨顺畅，力争为客户提供最优质完美的产品和服务。"</p>
+					<P><a href="#" data-reveal-id="myModal"  data-animation="fade">   jquery1 </a></P>
+				</div>
+			</div>
+			<!----start-portfolio----->
+		<div class="portfolio portfolio-box">
+			<!----start-portfolio---->
+         <div  class="portfolio-main">
+	        
+					<script type="text/javascript" src="js/jquery.mixitup.min.js"></script>
+					<script type="text/javascript">
+						$(function () {
+							var filterList = {
+								init: function () {
+								
+									// MixItUp plugin
+									// http://mixitup.io
+									$('#portfoliolist').mixitup({
+										targetSelector: '.portfolio',
+										filterSelector: '.filter',
+										effects: ['fade'],
+										easing: 'snap',
+										// call the hover effect
+										onMixEnd: filterList.hoverEffect()
+									});				
+								
+								},
+								hoverEffect: function () {
+									// Simple parallax effect
+									$('#portfoliolist .portfolio').hover(
+										function () {
+											$(this).find('.label').stop().animate({bottom: 0}, 200, 'easeOutQuad');
+											$(this).find('img').stop().animate({top: -30}, 500, 'easeOutQuad');				
+										},
+										function () {
+											$(this).find('.label').stop().animate({bottom: -40}, 200, 'easeInQuad');
+											$(this).find('img').stop().animate({top: 0}, 300, 'easeOutQuad');								
+										}		
+									);				
+								
+								}
+					
+							};
+							// Run the show!
+							filterList.init();
+						});	
+					</script>
+				
+<!-- 					<ul id="filters" class="clearfix">
+						<li><span class="filter" data-filter="app card icon logo web">All</span> |</li>
+						<li><span class="filter  active" data-filter="app">Photography</span> |</li>
+						<li><span class="filter" data-filter="card">video</span> |</li>
+						<li><span class="filter" data-filter="icon">graphics</span> |</li>
+						<li><span class="filter" data-filter="app">branding</span> |</li>
+						<li><span class="filter" data-filter="app">web sites</span></li>
+					</ul> -->
+<script>
+    //根据参数名获得该参数  pname等于想要的参数名
+    function getParam(pname) {
+        var params = location.search.substr(1); //  获取参数 平且去掉？
+        var ArrParam = params.split('&');
+        if (ArrParam.length == 1) {
+            //只有一个参数的情况
+            return params.split('=')[1];
+        }
+        else {
+            //多个参数参数的情况
+            for (var i = 0; i < ArrParam.length; i++) {
+                if (ArrParam[i].split('=')[0] == pname) {
+                    return ArrParam[i].split('=')[1];
+                }
+            }
+        }
 
-    </div>
+    }
 
-    <div id="maximizePanelContainer">
-        <iframe id="expandFrame" src="resources/expand.html" width="100%" height="100%" scrolling="no" allowtransparency="true" frameborder="0"></iframe>
-    </div>
+    $(function() {
+        var mao = $("#" + getParam("paramName")); //获得锚点
+        if (mao.length > 0) {//判断对象是否存在
+            var pos = mao.offset().top-50;          //页面跳转后距离顶部50px;
+            $("html,body").animate({ scrollTop: pos  + 'px'}, 500);
+        }
+    });
+
+</script>
+
+					<div id="portfoliolist">
+					<div class="portfolio logo1 mix_all"  style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a  data-toggle="modal" data-target=".bs-example-modal-md" href="details.html" class="b-link-stripe b-animate-go  thickbox" id="1">
+						     <img class="p-img" src="images/case1-t.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>北京中环假日酒店</h3>
+						     				<span>国际五星（中国-北京）</span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>				
+					<div class="portfolio app mix_all" data-cat="app" style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a  data-target=".bs-example-modal-md" href="details.htm" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/p2.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>Duis nec congue</h3>
+						     				<span>Neque porro quisquam est qui dolorem </span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>		
+					<div class="portfolio web mix_all"  style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a  data-reveal-id="myModal" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/p3.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>Duis nec congue</h3>
+						     				<span>Neque porro quisquam est qui dolorem </span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>				
+					<div class="portfolio icon mix_all" data-cat="icon" style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a data-toggle="modal" data-target=".bs-example-modal-md" href="details.html" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/case1-t.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>北京中环假日酒店</h3>
+						     				<span>国际五星（中国-北京）</span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>	
+					<div class="portfolio app mix_all" data-cat="app" style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a data-toggle="modal" data-target=".bs-example-modal-md" href="details.html" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/case1-t.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>北京中环假日酒店</h3>
+						     				<span>国际五星（中国-北京）</span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>			
+					<div class="portfolio card mix_all" data-cat="card" style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a data-toggle="modal" data-target=".bs-example-modal-md" href="#" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/p6.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>Duis nec congue</h3>
+						     				<span>Neque porro quisquam est qui dolorem </span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>	
+					<div class="portfolio icon mix_all" data-cat="icon" style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a data-toggle="modal" data-target=".bs-example-modal-md" href="details.html" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/case1-t.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>北京中环假日酒店</h3>
+						     				<span>国际五星（中国-北京）</span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>	
+					<div class="portfolio app mix_all" data-cat="app" style="display: inline-block; opacity: 1;">
+						<div class="portfolio-wrapper">		
+							<a data-toggle="modal" data-target=".bs-example-modal-md" href="#" class="b-link-stripe b-animate-go  thickbox">
+						     <img class="p-img" src="images/p8.jpg" /><div class="b-wrapper">
+						     	<h2 class="b-animate b-from-left    b-delay03 ">
+						     		<div class="animate-head">
+						     			<div class="animate-head-left">
+						     				<h3>Duis nec congue</h3>
+						     				<span>Neque porro quisquam est qui dolorem </span>
+						     			</div>
+						     			<div class="animate-head-right">
+						     				<span><i class="fa fa-search-plus"> </i></span>
+						     			</div>
+						     			<div class="clearfix"> </div>
+						     		</div>
+						     	</h2>
+						  	</div></a>
+		                </div>
+					</div>			
+					<div class="clearfix"> </div>	
+					<a class="more-ports text-center" href="#"><span> </span></a>																																				
+				</div>
+		</div>
+		</div>
+		<div class="clearfix"> </div>
+		</div>
+         <!----//End-portfolio---->
+         <!----start-team----->
+         <div id="team" class="team">
+         	<div class="container">
+         		<div class="team-head text-center">
+         			<h3>Our Team members</h3>
+         			<p>"多年资深团队.."</p>
+         		</div>
+         		<div class="team-members-grids text-center">
+         			<div class="col-md-4 team-member-grid">
+         				<img src="images/A1.PNG" title="name" />
+         				<h5><a href="#">李亮</a></h5>
+         				<span>首席设计师</span>
+         				<p><h6>参与项目</h6></p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>天津泰达市民文化广场假日酒店</p>
+         				<p>Holiday Inn hotel Tianjin</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+
+         			</div>
+         			<div class="col-md-4 team-member-grid">
+         				<img src="images/A2.JPG" title="name" />
+         				<h5><a href="#">于力</a></h5>
+         				<span>首席设计师</span>
+         				<p><h6>参与项目</h6></p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>天津泰达市民文化广场假日酒店</p>
+         				<p>Holiday Inn hotel Tianjin</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+
+         			</div>
+         			<div class="col-md-4 team-member-grid">
+         				<img src="images/A3.JPG" title="name" />
+         				<h5><a href="#">王颖</a></h5>
+         				<span>首席设计师</span>
+         				<p><h6>参与项目</h6></p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+         				<p>天津泰达市民文化广场假日酒店</p>
+         				<p>Holiday Inn hotel Tianjin</p>
+         				<p>沈阳洲际酒店</p>
+         				<p>Holiday hotel Shenyan</p>
+ 
+
+         			</div>
+         			<div class="clearfix"> </div>
+         		</div>
+         	</div>
+         </div>
+         <!----//End-team----->
+         <!----start-contact---->
+         <div id="contact" class="contact">
+         	<div class="container">
+         		<div class="contact-head text-center">
+         			<h3>联系我们</h3>
+         			<span>期待你的联络</span>
+         			<p>我们将为您提供...</p>
+         		</div>
+         		<div class="contact-grids">
+         			<div class="col-md-7 contact-left">
+         				<h4></h4>
+         		
+         			</div>
+         			<div class="col-md-5 contact-right">
+         				<h4>Contact info</h4><br />
+         				<p><span class="icon1"> </span><a href="#">info@website.com</a></p><br />
+         				<p><span class="icon2"> </span>123456789</p><br />
+         				<p><span class="icon3"> </span><label>Office no 1, main road city name- 78</label></p><br />
+         				<h4>Follow us on</h4><br />
+         				<ul class="list-unstyled list-inline">
+         					<li><a class="face" href="#"><span> </span></a></li>
+         					<li><a class="drib" href="#"><span> </span></a></li>
+         					<li><a class="twitt" href="#"><span> </span></a></li>
+         					<li><a class="sanp" href="#"><span> </span></a></li>
+         					<li><a class="gpluse" href="#"><span> </span></a></li>
+         				</ul>
+         			</div>
+         			<div class="clearfix"> </div>
+         		</div>
+         	</div>
+         </div>
+         <!----//End-contact---->
+         <!-----start-footer---->
+         <div class="footer">
+         	<div class="container">
+         		<div class="footer-right">
+         			<p>Copyright &copy; 2018.意典Company name All rights reserved. </p>
+         			<script type="text/javascript">
+						$(document).ready(function() {
+							/*
+							var defaults = {
+					  			containerID: 'toTop', // fading element id
+								containerHoverID: 'toTopHover', // fading element hover id
+								scrollSpeed: 1200,
+								easingType: 'linear' 
+					 		};
+							*/
+							
+							$().UItoTop({ easingType: 'easeOutQuart' });
+							
+						});
+					</script>
+				<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+         		</div>
+         		<div class="clearfix"> </div>
+         	</div>
+         </div>
+         <!-----//End-footer---->
+		<!-----//End-container----->
 
 </body>
 </html>
