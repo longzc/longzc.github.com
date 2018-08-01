@@ -1,7 +1,7 @@
 html, body{
     font-family: 'Open Sans', sans-serif;
     font-size: 100%;
-    background-color: #1b242f;
+    background-color: #191816;
 }
 body a{
 	transition:0.5s all;
@@ -15,7 +15,7 @@ body a{
 	float:left;
 }
 .logo a{
-	color: #1b242f;
+	color: #191816;
 	font-weight: 700;
 	margin-top: 1em;
 }
@@ -608,7 +608,8 @@ nav a#pull {
 		display:none;
 		float:left;
 		overflow:hidden;
-		background: #1b242f;
+		background: #231f20;
+		padding: 10px;
 	}	
 	.portfolio-wrapper {
 		overflow:hidden;
