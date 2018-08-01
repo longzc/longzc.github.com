@@ -1,7 +1,7 @@
 html, body{
     font-family: 'Open Sans', sans-serif;
     font-size: 100%;
-    background-color: #191816;
+    background-color: #000;
 }
 body a{
 	transition:0.5s all;
@@ -484,14 +484,14 @@ nav a#pull {
 /*-----//End-services----*/
 /*-----start-about----*/
 .about{
-	background:url(../images/about-bg.jpg);
+	background:#191816;
 	padding:3em 0 0 0;
 }
 .about-head{
 	text-align:center;
 }
 .about-head h4{
-	color: #3E2D35;
+	color: #fff;
 	margin: 0 0 0.5em 0;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -518,7 +518,7 @@ nav a#pull {
 	background-size: contain;
 }
 .about-grid-right h5,.about-grid-right h6{
-	color: #3E2D35;
+	color: #fff;
 	margin: 1em 0;
 	font-weight: 700;
 	font-size: 1.2em;
@@ -872,7 +872,7 @@ span.default_line {
 /*-----start-team----*/
 .team{
 	padding: 4em 0 2em;
-	background-color: #fff;
+	background-color: #191816;
 }
 .team-members-grids{
 	padding:3em 0;
@@ -908,6 +908,7 @@ span.default_line {
 	border-bottom: 10px solid #F4BB36;
 	margin-right: 3em;
 	width: 30.52%;
+	background-color: #fff;
 }
 .team-member-grid:nth-child(3){
 	margin-right:0;
