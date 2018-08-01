@@ -484,7 +484,7 @@ nav a#pull {
 /*-----//End-services----*/
 /*-----start-about----*/
 .about{
-	background:#191816;
+	background:#000;
 	padding:3em 0 0 0;
 }
 .about-head{
@@ -551,6 +551,7 @@ nav a#pull {
 /*-----start-portfolio----*/
 .portfolio-box-main{
 	padding: 3em 0 0 0;
+	background: #191816;
 }
 .portfolio-head h3{
 	text-transform: uppercase;
@@ -608,7 +609,7 @@ nav a#pull {
 		display:none;
 		float:left;
 		overflow:hidden;
-		background: #231f20;
+		background: #191816;
 		padding: 10px;
 	}	
 	.portfolio-wrapper {
@@ -872,7 +873,7 @@ span.default_line {
 /*-----start-team----*/
 .team{
 	padding: 4em 0 2em;
-	background-color: #191816;
+	background-color: #000;
 }
 .team-members-grids{
 	padding:3em 0;
