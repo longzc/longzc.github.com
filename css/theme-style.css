@@ -513,9 +513,10 @@ nav a#pull {
 .about-grid-left span{
 	width: 607px;
 	height: 444px;
-	background: url(../images/about-divice.png) no-repeat 0px 0px;
+	background: url(../images/about-divice.png) no-repeat  0px 0px;
 	display: inline-block;
 	background-size: contain;
+
 }
 .about-grid-right h5,.about-grid-right h6{
 	color: #fff;
@@ -955,7 +956,7 @@ span.default_line {
 /*-----//End-team----*/
 /*-----start-contact----*/
 .contact{
-	background:url(../images/contact-bg.jpg) no-repeat 0px 2px;
+	background:url(../images/contact-bg.png) no-repeat 0px 2px;
 	padding: 3em 0 4em;
 	background-size: 100% 100%;
 }
