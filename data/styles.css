@@ -60,6 +60,9 @@
 ._文本段落 {
   text-align:left;
 }
+.checkbox {
+  text-align:left;
+}
 .table_cell {
 }
 .form_hint {
@@ -81,5 +84,9 @@
 .text_field {
   color:#000000;
   text-align:left;
+}
+.placeholder {
+}
+.button {
 }
 textarea, select, input, button { outline: none; }
