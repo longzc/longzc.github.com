@@ -5357,3 +5357,53 @@
   text-transform:none;
   visibility:hidden;
 }
+#u149_div {
+  border-width:0px;
+  position:absolute;
+  left:0px;
+  top:0px;
+  width:220px;
+  height:20px;
+  background:inherit;
+  background-color:rgba(255, 255, 255, 0);
+  border:none;
+  border-radius:0px;
+  -moz-box-shadow:none;
+  -webkit-box-shadow:none;
+  box-shadow:none;
+  font-family:'FontAwesome ', 'FontAwesome', sans-serif;
+  font-weight:400;
+  font-style:normal;
+  font-size:20px;
+  color:#1ABC9C;
+  text-align:center;
+  line-height:20px;
+}
+#u149 {
+  border-width:0px;
+  position:absolute;
+  left:790px;
+  top:861px;
+  width:220px;
+  height:20px;
+  display:flex;
+  font-family:'FontAwesome ', 'FontAwesome', sans-serif;
+  font-weight:400;
+  font-style:normal;
+  font-size:20px;
+  color:#1ABC9C;
+  text-align:center;
+  line-height:20px;
+}
+#u149 .text {
+  position:absolute;
+  align-self:flex-start;
+  padding:0px 0px 0px 0px;
+  box-sizing:border-box;
+  width:100%;
+}
+#u149_text {
+  border-width:0px;
+  white-space:nowrap;
+  text-transform:none;
+}
